@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Protocol
 
 from .errors import JevApiError
-from .json_value import JsonObject, JsonValue
+from .json_value import JsonObject, JsonValue, to_json_bytes
 
 ENDPOINT = "https://api.typesafe.ai/v1/systemone"
 DEFAULT_MODEL = "jev-latest"
@@ -75,7 +75,7 @@ class HttpTransport:
     def ask(self, request: JsonObject) -> JsonValue:
         if self._key is None:
             self._key = load_api_key(self.key_file)
-        body = json.dumps(request, ensure_ascii=False, default=str).encode("utf-8")
+        body = to_json_bytes(request)
         http_request = urllib.request.Request(
             self.endpoint,
             data=body,

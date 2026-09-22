@@ -1,5 +1,6 @@
 """JSON 値の型と、型を確かめながら読み取る補助関数。"""
 
+import json
 from collections.abc import Mapping, Sequence
 
 from .errors import JevApiError
@@ -27,3 +28,8 @@ def as_text(value: JsonValue, where: str) -> str:
     if not isinstance(value, str):
         raise JevApiError(f"{where} が文字列ではありません")
     return value
+
+
+def to_json_bytes(value: JsonValue) -> bytes:
+    """JSON にできない値を str() に置き換えて、UTF-8 のバイト列にする。"""
+    return json.dumps(value, ensure_ascii=False, default=str).encode("utf-8")
